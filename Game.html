@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+            overflow: hidden;
+            /* display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; */
+        }
+        p{
+            font-size: 32px;
+        }
+        .box {
+            height: 100vh;
+            width: 100%;
+            flex-direction: column;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .viewChoice {
+            width: 388px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        table,
+        thead,
+        tbody,
+        tr,
+        td {
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        thead {
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(7) {
+            font-weight: bold;
+        }
+
+        td {
+            height: 20px;
+        }
+
+        button {
+            margin: 5px;
+            height: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <p>Welcome To Snake Water Gun Game</p>
+        <div class="viewChoice">
+            <h4 id="cmpchoice">Computer Choice : </h4>
+            <h4 id="usrchoice">Your Choice : </h4>
+        </div>
+        <table id="myTable">
+            <thead>
+                <tr>
+                    <td colspan="3">Choose one option</td>
+                    <td>Computer Score</td>
+                    <td>Your Score</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="6"><button id="btn1" onclick="btnclick(this.id)">Snake</button></td>
+                    <td rowspan="6"><button id="btn2" onclick="btnclick(this.id)">Water</button></td>
+                    <td rowspan="6"><button id="btn3" onclick="btnclick(this.id)">Gun</button></td>
+                </tr>
+                <tr id="row1">
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="row2">
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="row3">
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="row4">
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="row5">
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr id="total">
+                    <td colspan="3">TOTAL</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const test = (rw, cw) => {
+            if (rw == cw) {
+                return "tie";
+            }
+            else if ((rw == 'snake' && cw == 'gun') || (rw == 'water' && cw == 'snake') || (rw == 'gun' && cw == 'water')) {
+                return "usr";
+            }
+            else {
+                return "cmp";
+            }
+        }
+
+        let gameEnds = false;
+        const words = ["snake", "water", "gun"];
+        let rownum = 2;
+        let usrScore = 0;
+        let cmpScore = 0;
+        function btnclick(id) {
+            const randomIndex = Math.floor(Math.random() * words.length);
+            const randomWord = words[randomIndex];
+            const choice = document.getElementById(id).innerHTML.trim().toLowerCase();
+            document.getElementById('usrchoice').innerHTML = "Your Choice : " + choice;
+            document.getElementById('cmpchoice').innerHTML = "Computer Choice : " + randomWord;
+
+            res = test(randomWord, choice);
+            console.log(res);
+            var table = document.getElementById('myTable');
+            if (res == "tie") {
+                table.rows[rownum].cells[0].innerHTML = 0;
+                table.rows[rownum].cells[1].innerHTML = 0;
+            }
+            else if (res == 'cmp') {
+                table.rows[rownum].cells[0].innerHTML = 1;
+                table.rows[rownum].cells[1].innerHTML = 0;
+                cmpScore++;
+            }
+            else if (res == 'usr') {
+                table.rows[rownum].cells[0].innerHTML = 0;
+                table.rows[rownum].cells[1].innerHTML = 1;
+                usrScore++;
+            }
+            else {
+                console.log("error...!!!");
+            }
+            rownum++;
+            if (rownum == 7) {
+                var buttons = document.querySelectorAll('button');
+                buttons.forEach(function (button) {
+                    button.disabled = true;
+                });
+                table.rows[7].cells[1].innerHTML = cmpScore;
+                table.rows[7].cells[2].innerHTML = usrScore;
+                setTimeout(function () {
+                    if (cmpScore === usrScore) {
+                        alert("It's a tie!");
+                    } else if (cmpScore > usrScore) {
+                        alert("Computer wins!");
+                    } else {
+                        alert("You win!");
+                    }
+                    let ans = confirm("Do you want play again?");
+                    if(ans == true){
+                        location.reload();
+                    }
+                }, 800);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
